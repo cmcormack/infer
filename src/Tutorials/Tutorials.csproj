@@ -4,7 +4,6 @@
     <OutputType>Exe</OutputType>
     <AssemblyName>Tutorials</AssemblyName>
     <ErrorReport>prompt</ErrorReport>
-    <Prefer32Bit>false</Prefer32Bit>
     <DefineConstants>TRACE</DefineConstants>
     <RootNamespace>Microsoft.ML.Probabilistic.Tutorials</RootNamespace>
     <Configurations>Debug;Release;DebugFull;DebugCore;ReleaseFull;ReleaseCore</Configurations>
@@ -18,13 +17,20 @@
       </PropertyGroup>
     </When>
     <When Condition="'$(Configuration)'=='DebugCore' OR '$(Configuration)'=='ReleaseCore'">
-      <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
+      <PropertyGroup Condition="'$(OS)' == 'Windows_NT'">
+        <TargetFramework>net10.0-windows</TargetFramework>
       </PropertyGroup>
-    </When>
+	  <PropertyGroup Condition="'$(OS)' != 'Windows_NT'">
+		<TargetFramework>net10.0</TargetFramework>
+	  </PropertyGroup>
+	</When>
     <Otherwise>
-      <PropertyGroup>
-        <TargetFrameworks>net8.0;net8.0-windows;net472</TargetFrameworks>
+	  <PropertyGroup Condition="'$(OS)' == 'Windows_NT'">
+		<TargetFrameworks>net10.0-windows;net472</TargetFrameworks>
+		<AddSyntheticProjectReferencesForSolutionDependencies>false</AddSyntheticProjectReferencesForSolutionDependencies>
+      </PropertyGroup>
+	  <PropertyGroup Condition="'$(OS)' != 'Windows_NT'">
+        <TargetFrameworks>net10.0;net472</TargetFrameworks>
         <AddSyntheticProjectReferencesForSolutionDependencies>false</AddSyntheticProjectReferencesForSolutionDependencies>
       </PropertyGroup>
     </Otherwise>
@@ -47,12 +53,12 @@
     <ProjectReference Include="..\Compiler\Compiler.csproj" />
     <ProjectReference Include="..\Runtime\Runtime.csproj" />
   </ItemGroup>
-  <ItemGroup Condition="$(DefineConstants.Contains('NETFRAMEWORK'))">
+  <ItemGroup Condition="$(TargetFramework) == 'net472'">
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <Choose>
-    <When Condition="$(TargetFramework) == 'net472' OR $(TargetFramework) == 'net8.0-windows'">
+    <When Condition="$(TargetFramework) == 'net472' OR $(TargetFramework) == 'net10.0-windows'">
       <ItemGroup>
         <ProjectReference Include="..\Visualizers\Windows\Visualizers.Windows.csproj" />
         <Compile Update="ExamplesViewer.cs">

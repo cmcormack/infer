@@ -6,6 +6,7 @@ namespace Microsoft.ML.Probabilistic.Learners.Tests
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.IO;
     using System.IO.Compression;
     using System.Linq;
@@ -25,7 +26,6 @@ namespace Microsoft.ML.Probabilistic.Learners.Tests
     using StandardPredictiveDistribution = System.Collections.Generic.Dictionary<string, double>;
     using BoolPredictiveDistribution = System.Collections.Generic.Dictionary<bool, double>;
     using IntPredictiveDistribution = System.Collections.Generic.Dictionary<int, double>;
-    using Microsoft.ML.Probabilistic.Models;
 
     /// <summary>
     /// Tests for the Bayes point machine classifier.
@@ -95,7 +95,7 @@ namespace Microsoft.ML.Probabilistic.Learners.Tests
 
             public override Vector GetFeatures(string instance, string instanceSource = null)
             {
-                var array = instance.Split(",".ToCharArray()).Skip(1).Select(Convert.ToDouble).ToArray();
+                var array = instance.Split(",".ToCharArray()).Skip(1).Select(t => double.Parse(t, CultureInfo.InvariantCulture)).ToArray();
                 return Vector.FromArray(array);
             }
 
